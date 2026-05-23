@@ -1,0 +1,50 @@
+flowchart TD
+  subgraph Register
+    R1[POST /auth/register] --> R2[Validate RegisterDto]
+    R2 --> R3[Check email uniqueness]
+    R3 --> R4[Hash password with bcrypt]
+    R4 --> R5[Prisma transaction]
+    R5 --> R6[Create user]
+    R6 --> R7[Create default categories]
+    R7 --> R8[Generate access and refresh JWTs]
+    R8 --> R9[Store refresh token SHA-256 digest]
+    R9 --> R10[Return public user and tokens]
+  end
+
+  subgraph Login
+    L1[POST /auth/login] --> L2[Validate LoginDto]
+    L2 --> L3[Load user with password]
+    L3 --> L4[Compare bcrypt password]
+    L4 --> L5[Generate token pair]
+    L5 --> L6[Rotate stored refresh digest]
+    L6 --> L7[Return public user and tokens]
+  end
+
+  subgraph VerifyAccess
+    V1[Protected request] --> V2[JwtAuthGuard]
+    V2 --> V3[JwtStrategy verifies access token]
+    V3 --> V4[Attach userId email role]
+    V4 --> V5[Controller receives request.user]
+  end
+
+  subgraph RBAC
+    A1[@Roles metadata] --> A2[RolesGuard]
+    A2 --> A3{Role allowed?}
+    A3 -->|yes| A4[Route handler]
+    A3 -->|no| A5[FORBIDDEN_ACCESS]
+  end
+
+  subgraph Refresh
+    F1[POST /auth/refresh] --> F2[Verify refresh JWT]
+    F2 --> F3[Compare stored digest]
+    F3 --> F4[Load public user]
+    F4 --> F5[Generate new token pair]
+    F5 --> F6[Rotate refresh digest]
+    F6 --> F7[Return new tokens]
+  end
+
+  subgraph Logout
+    O1[POST /auth/logout] --> O2[JwtAuthGuard]
+    O2 --> O3[Set refreshToken null]
+    O3 --> O4[Return loggedOut true]
+  end

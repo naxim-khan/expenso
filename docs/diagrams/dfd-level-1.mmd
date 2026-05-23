@@ -1,0 +1,34 @@
+flowchart TD
+  User[API consumer]
+  Auth[Auth module]
+  Categories[Categories module]
+  Transactions[Transactions module]
+  Dashboard[Dashboard read model]
+  Reports[Reports read model]
+  Health[Health endpoint]
+  DB[(PostgreSQL)]
+
+  User -->|register login refresh logout me| Auth
+  Auth -->|user refreshToken categories bootstrap| DB
+
+  User -->|category CRUD and lists| Categories
+  Categories -->|user-scoped category data| DB
+
+  User -->|transaction CRUD and lists| Transactions
+  Transactions -->|validate category and write transactions| DB
+
+  User -->|dashboard filters| Dashboard
+  Dashboard -->|aggregated transaction/category reads| DB
+
+  User -->|report filters exports previews| Reports
+  Reports -->|aggregated and paginated reads| DB
+
+  User -->|health check| Health
+  Health -->|database count smoke test| DB
+
+  DB --> Auth
+  DB --> Categories
+  DB --> Transactions
+  DB --> Dashboard
+  DB --> Reports
+  DB --> Health

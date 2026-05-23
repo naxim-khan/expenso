@@ -1,0 +1,14 @@
+flowchart TD
+  Controller[Controller<br/>HTTP binding only]
+  Service[Service<br/>Use-case orchestration and domain decisions]
+  Repository[Repository<br/>Prisma query shape and data access]
+  Prisma[PrismaService<br/>Client lifecycle and DB adapter]
+  Database[(PostgreSQL<br/>Durable relational data)]
+
+  Controller --> Service --> Repository --> Prisma --> Database
+
+  Controller -. why .-> CWhy[Prevents HTTP concerns from leaking into business logic]
+  Service -. why .-> SWhy[Keeps workflows testable and transaction boundaries explicit]
+  Repository -. why .-> RWhy[Makes query performance user scoping and indexes reviewable]
+  Prisma -. why .-> PWhy[Single database abstraction and generated schema types]
+  Database -. why .-> DWhy[ACID persistence for financial records]

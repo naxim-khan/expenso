@@ -1,0 +1,61 @@
+erDiagram
+  User ||--o{ Category : owns
+  User ||--o{ Transaction : owns
+  Category ||--o{ Transaction : classifies
+
+  User {
+    string id PK
+    string email UK
+    string name
+    string password
+    Role role
+    string refreshToken
+    datetime createdAt
+    datetime updatedAt
+  }
+
+  Category {
+    string id PK
+    string name
+    string normalizedName
+    CategoryType type
+    boolean isSystem
+    int version
+    string userId FK
+    datetime createdAt
+    datetime updatedAt
+  }
+
+  Transaction {
+    string id PK
+    string title
+    float amount
+    TransactionType type
+    string note
+    string userId FK
+    string categoryId FK
+    datetime createdAt
+    datetime updatedAt
+  }
+
+  EnumValues {
+    string TransactionType "INCOME EXPENSE"
+    string CategoryType "INCOME EXPENSE"
+    string Role "USER ADMIN"
+  }
+
+  IndexStrategy {
+    string Category_userId_normalizedName "unique"
+    string Category_userId_createdAt "list pagination"
+    string Category_userId_type "filter"
+    string Transaction_userId_createdAt "list pagination"
+    string Transaction_userId_type "filter"
+    string Transaction_userId_categoryId "filter"
+    string Transaction_userId_createdAt_type "dashboard reports"
+    string Transaction_userId_categoryId_createdAt "category reports"
+    string Transaction_userId_amount "report sort"
+    string Transaction_userId_title "report sort"
+  }
+
+  %% User deletes cascade to owned Category and Transaction records.
+  %% Category deletion is restricted by service logic when transactions exist.

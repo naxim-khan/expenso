@@ -1,0 +1,14 @@
+flowchart LR
+  Controller[Controller] --> Service[Service]
+  Service --> Domain[Domain helpers and invariants]
+  Service --> Repository[Repository]
+  Repository --> Selects[Explicit select lists]
+  Repository --> Filters[User-scoped where filters]
+  Repository --> Pagination[Shared cursor helpers]
+  Repository --> Aggregates[aggregate groupBy raw SQL]
+  Repository --> Prisma[Prisma client or transaction client]
+  Prisma --> Database[(PostgreSQL)]
+
+  Service -. owns .-> Orchestration[Flow transaction scope errors mapper calls]
+  Repository -. owns .-> QueryShape[Indexes joins filters sorting performance]
+  Domain -. owns .-> Rules[Reusable pure business rules]

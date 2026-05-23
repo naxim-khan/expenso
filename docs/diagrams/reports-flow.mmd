@@ -1,0 +1,20 @@
+flowchart LR
+  Client[Authenticated client] --> Controller[ReportsController]
+  Controller --> DTO[Report DTO validation]
+  DTO --> Service[ReportsService]
+  Service --> Normalize[Normalize dates amounts search sort]
+  Normalize --> Repository[ReportsRepository]
+  Repository --> Summary[Prisma groupBy summary]
+  Repository --> Table[Cursor report table query]
+  Repository --> Period[date_trunc period totals]
+  Repository --> Category[Category grouped totals]
+  Summary --> Database[(PostgreSQL)]
+  Table --> Database
+  Period --> Database
+  Category --> Database
+  Database --> Repository
+  Repository --> Mapper[ReportsMapper]
+  Mapper --> Envelope[ApiResponseInterceptor]
+  Envelope --> Client
+
+  Normalize -. rejects .-> Error[minAmount greater than maxAmount or invalid date range]

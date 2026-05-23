@@ -1,0 +1,18 @@
+flowchart LR
+  Client[Authenticated client] --> Controller[DashboardController]
+  Controller --> Service[DashboardService]
+  Service --> Query[Build user-scoped dashboard query]
+  Query --> Repository[DashboardRepository]
+  Repository --> Aggregate[Prisma aggregate count groupBy]
+  Repository --> RawSQL[Parameterized date_trunc SQL]
+  Repository --> Recent[Recent transaction select]
+  Aggregate --> Database[(PostgreSQL)]
+  RawSQL --> Database
+  Recent --> Database
+  Database --> Repository
+  Repository --> Mapper[DashboardMapper]
+  Mapper --> Service
+  Service --> Envelope[ApiResponseInterceptor]
+  Envelope --> Client
+
+  Query -. filters .-> Filters[startDate endDate month year type categoryId groupBy limit cursor]

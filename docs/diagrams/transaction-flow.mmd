@@ -1,0 +1,29 @@
+flowchart TD
+  subgraph RegistrationTransaction
+    R1[Begin Prisma transaction] --> R2[Create user]
+    R2 --> R3[Create default categories]
+    R3 --> R4[Generate token pair]
+    R4 --> R5[Store refresh token digest]
+    R5 --> R6[Commit]
+    R2 -. failure .-> RR[Rollback]
+    R3 -. failure .-> RR
+    R5 -. failure .-> RR
+  end
+
+  subgraph TransactionCreate
+    C1[Begin Prisma transaction] --> C2[Find category by userId and categoryId]
+    C2 --> C3{Category exists and type matches?}
+    C3 -->|yes| C4[Create transaction]
+    C4 --> C5[Commit]
+    C3 -->|no| CR[Rollback and TRANSACTION_CATEGORY_INVALID]
+  end
+
+  subgraph TransactionUpdate
+    U1[Begin Prisma transaction] --> U2[Find transaction by userId and id]
+    U2 --> U3{Transaction exists?}
+    U3 -->|yes| U4[Derive next category and type]
+    U4 --> U5[Validate category ownership and type]
+    U5 --> U6[Update transaction]
+    U6 --> U7[Commit]
+    U3 -->|no| UR[Rollback and TRANSACTION_NOT_FOUND]
+  end

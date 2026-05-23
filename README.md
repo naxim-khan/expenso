@@ -2,7 +2,7 @@
 
 Expenso Backend is a production-oriented NestJS API for a multi-user expense management product. It provides authentication, category management, transaction management, dashboard read models, report read models, cursor pagination, centralized response/error contracts, and PostgreSQL persistence through Prisma.
 
-Full engineering documentation lives in [`../docs`](../docs/README.md).
+Full engineering documentation lives in [`./docs`](./docs/README.md).
 
 ## Architecture Overview
 
@@ -212,7 +212,7 @@ E2E tests use the configured database and delete table data before each test. Ru
 
 ## Diagrams
 
-Mermaid diagrams are in [`../docs/diagrams`](../docs/diagrams):
+Mermaid diagrams are in [`./docs/diagrams`](./docs/diagrams/):
 
 - Request lifecycle
 - Authentication flow

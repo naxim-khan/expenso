@@ -1,0 +1,22 @@
+flowchart LR
+  Client[Client]
+  Middleware[Helmet and CORS]
+  Prefix[Global prefix /api/v1]
+  Guards[JwtAuthGuard and optional RolesGuard]
+  Validation[Global ValidationPipe]
+  Controller[Controller]
+  Service[Service]
+  Repository[Repository]
+  Prisma[PrismaService]
+  Database[(PostgreSQL)]
+  Interceptor[ApiResponseInterceptor]
+  ExceptionFilter[HttpExceptionFilter]
+  Response[Client response]
+
+  Client --> Middleware --> Prefix --> Guards --> Validation --> Controller --> Service --> Repository --> Prisma --> Database
+  Database --> Prisma --> Repository --> Service --> Controller --> Interceptor --> Response
+  Guards -. unauthorized .-> ExceptionFilter
+  Validation -. validation error .-> ExceptionFilter
+  Service -. AppException .-> ExceptionFilter
+  Repository -. unexpected error .-> ExceptionFilter
+  ExceptionFilter --> Response

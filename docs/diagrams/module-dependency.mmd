@@ -1,0 +1,30 @@
+flowchart TD
+  AppModule[AppModule]
+  ConfigModule[ConfigModule]
+  PrismaModule[PrismaModule]
+  AuthModule[AuthModule]
+  CategoriesModule[CategoriesModule]
+  TransactionsModule[TransactionsModule]
+  DashboardModule[DashboardModule]
+  ReportsModule[ReportsModule]
+  HealthController[HealthController]
+
+  AppModule --> ConfigModule
+  AppModule --> PrismaModule
+  AppModule --> AuthModule
+  AppModule --> CategoriesModule
+  AppModule --> TransactionsModule
+  AppModule --> DashboardModule
+  AppModule --> ReportsModule
+  AppModule --> HealthController
+
+  AuthModule --> CategoriesModule
+  AuthModule --> PrismaModule
+  CategoriesModule --> PrismaModule
+  TransactionsModule --> PrismaModule
+  DashboardModule --> PrismaModule
+  ReportsModule --> PrismaModule
+
+  AuthModule -. registration defaults .-> CategoriesModule
+  DashboardModule -. read model over transactions categories .-> PrismaModule
+  ReportsModule -. read model over transactions categories .-> PrismaModule

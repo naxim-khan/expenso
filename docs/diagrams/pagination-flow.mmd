@@ -1,0 +1,16 @@
+flowchart TD
+  A[Client requests limit and optional cursor] --> B[DTO validates limit cursor sort fields]
+  B --> C[Service passes query to repository]
+  C --> D[buildPrismaCursorQuery]
+  D --> E[Query take limit plus one]
+  E --> F[Optional cursor id and skip one]
+  F --> G[Order by sort field and id tiebreaker]
+  G --> H[(PostgreSQL indexed scan)]
+  H --> I[Repository returns rows]
+  I --> J[buildCursorPagination]
+  J --> K{Rows greater than limit?}
+  K -->|yes| L[Trim extra row set hasNext true nextCursor last returned id]
+  K -->|no| M[hasNext false nextCursor null]
+  L --> N[ApiResponseInterceptor moves meta to response]
+  M --> N
+  N --> O[Client requests next page with nextCursor]
