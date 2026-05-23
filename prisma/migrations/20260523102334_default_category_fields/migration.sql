@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Category" ADD COLUMN     "isSystem" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "version" INTEGER NOT NULL DEFAULT 1;

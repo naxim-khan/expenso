@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: expenso-postgres
+    environment:
+      POSTGRES_USER: expenso
+      POSTGRES_PASSWORD: expenso123
+      POSTGRES_DB: expenso_db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U expenso -d expenso_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - expenso-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  expenso-postgres-data:
