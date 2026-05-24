@@ -5,14 +5,24 @@ import helmet from 'helmet';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { ApiResponseInterceptor } from '../common/interceptors/api-response.interceptor';
 
+function parseAllowedOrigins(frontendUrl: string) {
+  return frontendUrl
+    .split(',')
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
+    .filter(Boolean);
+}
+
 export function configureApp(app: INestApplication) {
   const configService = app.get(ConfigService);
   const reflector = app.get(Reflector);
+  const allowedOrigins = parseAllowedOrigins(
+    configService.get<string>('FRONTEND_URL', 'http://localhost:3000'),
+  );
 
   app.setGlobalPrefix('api/v1');
   app.use(helmet());
   app.enableCors({
-    origin: configService.get<string>('FRONTEND_URL', 'http://localhost:3000'),
+    origin: allowedOrigins,
     credentials: true,
   });
   app.useGlobalPipes(
