@@ -241,3 +241,4 @@ Future scale work may include read replicas, materialized report views, full-tex
 - User-owned queries always include authenticated `userId`.
 - API responses preserve the `/api/v1` envelope.
 - Architecture, API, database, and diagram docs must be updated with related code changes.
+nazeem khan
